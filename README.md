@@ -7,7 +7,15 @@ L'intégration utilise des icônes Material Design Icons (MDI) qui changent auto
 - **Relais** : `mdi:electric-switch` (OFF) / `mdi:electric-switch-closed` (ON)
 - **DIO** : `mdi:toggle-switch-off` (OFF) / `mdi:toggle-switch` (ON)
 
-📖 **Guide complet de personnalisation** : [docs/ICONS.md](docs/ICONS.md)ome Assistant](https://img.shields.io/badge/Home%20Assistant-Compatible-blue.svg)
+📖 **Guide complet de personnalisation** : [docs/ICONS.md](docs/ICONS.md)
+
+### Icône du dépôt HACS
+
+Pour personnaliser l'icône visible dans HACS :
+1. Convertissez `assets/icon.svg` en PNG 256x256 pixels
+2. Renommez le fichier en `icon.png`
+3. Placez-le à la racine du dépôt
+4. HACS détectera automatiquement la nouvelle icôneome Assistant](https://img.shields.io/badge/Home%20Assistant-Compatible-blue.svg)
 ![Version](https://img.shields.io/badge/version-1.0.1-green.svg)
 
 ## Description
