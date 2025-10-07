@@ -2,7 +2,7 @@
   "domain": "rmg_rio4",
   "name": "RMG RIO 4",
   "version": "1.0.0",
-  "documentation": "https://github.com/gitinloc-dfe/HASS-RMG_RIO_4.git",
+  "documentation": "https://github.com/gitinloc-dfe/HASS-RMG_RIO_4",
   "issue_tracker": "https://github.com/gitinloc-dfe/HASS-RMG_RIO_4/issues",
   "requirements": [],
   "codeowners": ["@gitinloc-dfe"],
