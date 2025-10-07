@@ -1,0 +1,42 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "RMG Rio 4 Setup",
+        "description": "Enter the connection parameters for your RMG Rio 4 relay box",
+        "data": {
+          "host": "IP Address",
+          "port": "Port",
+          "username": "Username",
+          "password": "Password",
+          "num_relays": "Number of relays"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Failed to connect to the device",
+      "invalid_auth": "Authentication failed",
+      "timeout": "Connection timeout",
+      "unknown": "Unknown error"
+    },
+    "abort": {
+      "already_configured": "Device is already configured"
+    }
+  },
+  "services": {
+    "pulse_relay": {
+      "name": "Pulse Relay",
+      "description": "Activate a relay for a specified duration then automatically deactivate it",
+      "fields": {
+        "entity_id": {
+          "name": "Relay Entity",
+          "description": "The relay to activate in pulse mode"
+        },
+        "duration": {
+          "name": "Duration (seconds)",
+          "description": "Duration of the pulse in seconds"
+        }
+      }
+    }
+  }
+}

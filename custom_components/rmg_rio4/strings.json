@@ -1,0 +1,26 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Configuration RMG Rio4",
+        "description": "Entrez les informations de connexion à votre boîtier relais TCP",
+        "data": {
+          "host": "Adresse IP",
+          "port": "Port TCP",
+          "username": "Nom d'utilisateur",
+          "password": "Mot de passe",
+          "num_relays": "Nombre de relais"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Impossible de se connecter au boîtier",
+      "invalid_auth": "Authentification échouée - vérifiez vos identifiants",
+      "timeout": "Délai de connexion dépassé",
+      "unknown": "Erreur inconnue"
+    },
+    "abort": {
+      "already_configured": "Ce boîtier est déjà configuré"
+    }
+  }
+}

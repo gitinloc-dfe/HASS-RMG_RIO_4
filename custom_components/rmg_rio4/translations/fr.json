@@ -1,0 +1,42 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Configuration RMG Rio 4",
+        "description": "Entrez les paramètres de connexion pour votre boîtier RMG Rio 4",
+        "data": {
+          "host": "Adresse IP",
+          "port": "Port",
+          "username": "Nom d'utilisateur",
+          "password": "Mot de passe",
+          "num_relays": "Nombre de relais"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Impossible de se connecter au boîtier",
+      "invalid_auth": "Authentification échouée",
+      "timeout": "Timeout de connexion",
+      "unknown": "Erreur inconnue"
+    },
+    "abort": {
+      "already_configured": "Le dispositif est déjà configuré"
+    }
+  },
+  "services": {
+    "pulse_relay": {
+      "name": "Impulsion relais",
+      "description": "Active un relais pendant une durée déterminée puis le désactive automatiquement",
+      "fields": {
+        "entity_id": {
+          "name": "Entité relais",
+          "description": "Le relais à activer en mode impulsion"
+        },
+        "duration": {
+          "name": "Durée (secondes)",
+          "description": "Durée de l'impulsion en secondes"
+        }
+      }
+    }
+  }
+}

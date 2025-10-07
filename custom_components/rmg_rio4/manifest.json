@@ -1,0 +1,12 @@
+{
+  "domain": "rmg_rio4",
+  "name": "RMG RIO 4",
+  "version": "1.0.0",
+  "documentation": "https://github.com/gitinloc-dfe/HASS-RMG_RIO_4.git",
+  "issue_tracker": "https://github.com/gitinloc-dfe/HASS-RMG_RIO_4/issues",
+  "requirements": [],
+  "codeowners": ["@gitinloc-dfe"],
+  "config_flow": true,
+  "iot_class": "local_push",
+  "integration_type": "device"
+}

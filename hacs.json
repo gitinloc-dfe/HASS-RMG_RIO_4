@@ -1,0 +1,10 @@
+{
+  "name": "RMG RIO 4",
+  "content_in_root": false,
+  "render_readme": true,
+  "domains": ["switch"],
+  "homeassistant": "2023.1.0",
+  "iot_class": "Local Push",
+  "zip_release": true,
+  "filename": "rmg_rio4.zip"
+}

@@ -1,0 +1,75 @@
+# Exemple d'automatisations pour RMG Rio 4
+
+# Automation 1: Activer un relais avec un bouton
+automation:
+  - alias: "Portail - Ouverture"
+    trigger:
+      - platform: state
+        entity_id: input_button.ouvrir_portail
+        to: "on"
+    action:
+      - service: rmg_rio4.pulse_relay
+        data:
+          entity_id: switch.relais_1
+          duration: 2.5
+
+  # Automation 2: Contrôler un relais selon un capteur
+  - alias: "Eclairage automatique"
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.detecteur_mouvement
+        to: "on"
+    action:
+      - service: switch.turn_on
+        target:
+          entity_id: switch.relais_2
+
+  # Automation 3: Éteindre après un délai
+  - alias: "Eclairage automatique - extinction"
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.detecteur_mouvement
+        to: "off"
+        for:
+          minutes: 5
+    action:
+      - service: switch.turn_off
+        target:
+          entity_id: switch.relais_2
+
+# Exemple de script pour impulsion personnalisée
+script:
+  portail_impulsion_longue:
+    alias: "Portail - Impulsion longue"
+    sequence:
+      - service: rmg_rio4.pulse_relay
+        data:
+          entity_id: switch.relais_1
+          duration: 5.0
+
+  arrosage_zone_1:
+    alias: "Arrosage Zone 1"
+    sequence:
+      - service: rmg_rio4.pulse_relay
+        data:
+          entity_id: switch.relais_3
+          duration: 300  # 5 minutes
+
+# Exemple de carte Lovelace
+# Dans votre dashboard, ajoutez:
+# type: entities
+# entities:
+#   - entity: switch.relais_1
+#     name: "Portail"
+#     tap_action:
+#       action: call-service
+#       service: rmg_rio4.pulse_relay
+#       service_data:
+#         entity_id: switch.relais_1
+#         duration: 2.5
+#   - entity: switch.relais_2
+#     name: "Éclairage extérieur"
+#   - entity: switch.relais_3
+#     name: "Arrosage"
+#   - entity: switch.relais_4
+#     name: "Autre équipement"

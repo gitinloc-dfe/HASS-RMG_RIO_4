@@ -1,0 +1,23 @@
+pulse_relay:
+  name: Impulsion relais
+  description: Active un relais pendant une durée déterminée puis le désactive automatiquement
+  fields:
+    entity_id:
+      name: Entité
+      description: Le relais à activer en mode impulsion
+      required: true
+      selector:
+        entity:
+          domain: switch
+          integration: rmg_rio4
+    duration:
+      name: Durée
+      description: Durée de l'impulsion en secondes
+      required: false
+      default: 0.5
+      selector:
+        number:
+          min: 0.1
+          max: 60
+          step: 0.1
+          unit_of_measurement: "s"

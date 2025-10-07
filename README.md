@@ -1,2 +1,252 @@
-# HASS-RMG_RIO_4
-Module RMG RIO4 pour HASS
+# HASS-RMG-RIO-4
+
+Intégration Home Assistant pour le boîtier RMG RIO 4 (contrôle de relais via TCP)
+
+![Home Assistant](https://img.shields.io/badge/Home%20Assistant-Compatible-blue.svg)
+![Version](https://img.shields.io/badge/version-1.0.0-green.svg)
+
+## Description
+
+Cette intégration personnalisée permet de contrôler le boîtier **RMG RIO 4** via Home Assistant. Le boîtier communique en TCP sur le port 22023 et permet de piloter des relais et des sorties DIO.
+
+### Fonctionnalités
+
+✅ Connexion TCP persistante au boîtier  
+✅ Authentification automatique  
+✅ Contrôle ON/OFF des relais  
+✅ Mode PULSE (impulsion temporaire)  
+✅ Mise à jour en temps réel des états  
+✅ Configuration via l'interface graphique  
+✅ Support de plusieurs relais et sorties DIO  
+
+## Installation
+
+### Méthode HACS (recommandée)
+
+1. Ouvrez HACS dans Home Assistant
+2. Allez dans "Intégrations"
+3. Cliquez sur les 3 points en haut à droite
+4. Sélectionnez "Dépôts personnalisés"
+5. Ajoutez l'URL : `https://github.com/gitinloc-dfe/HASS-RMG_RIO_4.git
+6. Sélectionnez la catégorie "Integration"
+7. Cliquez sur "Ajouter"
+8. Recherchez "RMG RIO 4" et installez
+
+### Méthode manuelle
+
+1. Téléchargez le dossier `custom_components/rmg_rio4`
+2. Copiez-le dans votre dossier `custom_components` de Home Assistant :
+   ```
+   config/
+   └── custom_components/
+       └── rmg_rio4/
+           ├── __init__.py
+           ├── config_flow.py
+           ├── manifest.json
+           ├── services.yaml
+           ├── strings.json
+           └── switch.py
+   ```
+3. Redémarrez Home Assistant
+
+## Configuration
+
+1. Allez dans **Paramètres** → **Appareils et services** → **Ajouter une intégration**
+2. Recherchez **"RMG RIO 4"**
+3. Remplissez les informations de connexion :
+   - **Adresse IP** : L'adresse IP de votre boîtier (ex: `172.18.0.45`)
+   - **Port TCP** : `22023` (par défaut)
+   - **Nom d'utilisateur** : `admin` (par défaut)
+   - **Mot de passe** : Votre mot de passe (ex: `numéro de série`)
+   - **Nombre de relais** : Le nombre de relais disponibles (ex: `4`)
+
+## Utilisation
+
+### Contrôle des relais
+
+Les relais apparaissent comme des entités `switch` dans Home Assistant :
+- `switch.relais_1`
+- `switch.relais_2`
+- `switch.relais_3`
+- `switch.relais_4`
+
+### Commandes basiques
+
+#### Activer/Désactiver un relais
+
+```yaml
+# Dans une automation ou un script
+service: switch.turn_on
+target:
+  entity_id: switch.relais_1
+
+service: switch.turn_off
+target:
+  entity_id: switch.relais_1
+```
+
+### Service PULSE
+
+Le service `rmg_rio4.pulse_relay` permet d'activer un relais pendant une durée définie puis de le désactiver automatiquement.
+
+#### Exemple d'utilisation
+
+```yaml
+# Impulsion de 2.5 secondes sur le relais 1
+service: rmg_rio4.pulse_relay
+data:
+  entity_id: switch.relais_1
+  duration: 2.5
+```
+
+#### Cas d'usage typique : Portail ou porte de garage
+
+```yaml
+automation:
+  - alias: "Ouvrir le portail"
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.bouton_portail
+        to: "on"
+    action:
+      - service: rmg_rio4.pulse_relay
+        data:
+          entity_id: switch.relais_1
+          duration: 0.5  # Impulsion de 500ms
+```
+
+## Protocole de communication
+
+Le boîtier RMG RIO 4 utilise un protocole TCP texte simple :
+
+### Authentification
+```
+← LOGINREQUEST?        # Le serveur demande l'authentification
+→ admin;password\r     # Envoi des identifiants
+← AUTHENTICATION=Successful
+```
+
+### Commandes disponibles
+
+#### Contrôle des relais
+```
+→ RELAY1 ON\r          # Activer le relais 1
+← RELAY1=ON            # Confirmation
+
+→ RELAY1 OFF\r         # Désactiver le relais 1  
+← RELAY1=OFF           # Confirmation
+
+→ RELAY1 PULSE 2.5\r   # Impulsion de 2.5 secondes
+← RELAY1=ON            # Activation immédiate
+← RELAY1=OFF           # Désactivation automatique après 2.5s
+
+→ RELAY1?\r            # Demander l'état du relais 1
+← RELAY1=ON            # Réponse avec l'état actuel
+```
+
+#### Contrôle des DIO (Digital Input/Output)
+```
+→ DIO1?\r              # Demander l'état de DIO1
+← DIO1=OFF             # Réponse
+
+→ DIO1 ON\r            # Activer DIO1 (si c'est une sortie)
+← DIO1=ON              # Confirmation
+← DIO1=TYPE DI ERROR   # Erreur si c'est une entrée
+
+→ DIO1 OFF\r           # Désactiver DIO1
+← DIO1=OFF             # Confirmation
+```
+
+#### Informations système
+```
+→ SERIALNUMBER?\r      # Numéro de série
+← SERIALNUMBER=xxxxx
+
+→ FIRMWAREVERSION?\r   # Version du firmware
+← FIRMWAREVERSION=x.x.x
+
+→ HOSTNAME?\r          # Nom d'hôte
+← HOSTNAME=RMG-xxxxx
+
+→ GOODBYE!\r           # Fermeture propre
+← BYEBYE!
+```
+
+### États automatiques
+Le serveur envoie automatiquement :
+1. **À la connexion** : tous les états actuels
+2. **En temps réel** : tous les changements d'état
+
+```
+← RELAY1=ON
+← RELAY2=OFF
+← RELAY3=OFF
+← RELAY4=OFF
+← DIO1=OFF
+← DIO2=ON
+← DIO3=OFF
+← DIO4=OFF
+```
+
+## Dépannage
+
+### L'intégration ne se connecte pas
+
+1. **Testez d'abord avec le script fourni** :
+   ```bash
+   python3 test_connection.py 192.168.1.100 22023 admin votre_password
+   # ou pour un test complet :
+   python3 test_full.py 192.168.1.100 22023 admin votre_password
+   ```
+
+2. Vérifiez que l'adresse IP et le port sont corrects
+3. Vérifiez que le mot de passe est correct (souvent le numéro de série)
+4. Consultez les logs de Home Assistant : **Paramètres** → **Système** → **Logs**
+
+### Les états ne se mettent pas à jour
+
+1. Vérifiez que la connexion TCP est toujours active
+2. Redémarrez l'intégration depuis **Appareils et services**
+3. Vérifiez les logs pour détecter les erreurs de communication
+
+### Activer les logs de débogage
+
+Ajoutez dans votre `configuration.yaml` :
+
+```yaml
+logger:
+  default: info
+  logs:
+    custom_components.rmg_rio4: debug
+```
+
+## Compatibilité
+
+- Home Assistant : 2023.1 ou supérieur
+- Python : 3.11 ou supérieur
+- Boîtier : RMG RIO 4 avec firmware compatible TCP
+
+## Contribution
+
+Les contributions sont les bienvenues ! N'hésitez pas à :
+- Ouvrir une issue pour signaler un bug
+- Proposer des améliorations
+- Soumettre des pull requests
+
+## Licence
+
+Ce projet est sous licence MIT. Voir le fichier [LICENSE](LICENSE) pour plus de détails.
+
+## Support
+
+Pour toute question ou problème :
+- Ouvrez une [issue sur GitHub](https://github.com/VOTRE-USERNAME/HASS-RMG-RIO-4/issues)
+- Consultez la [documentation Home Assistant](https://www.home-assistant.io/)
+
+## Auteur
+
+Créé pour la communauté Home Assistant 🏠
+
+---
+
+**Note** : Cette intégration n'est pas officiellement supportée par RMG. C'est un projet communautaire indépendant.
