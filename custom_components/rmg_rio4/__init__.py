@@ -141,8 +141,8 @@ class RelayBoxConnection:
                 device = device.strip()
                 state = state.strip()
                 
-                # Vérifier que l'état est valide
-                if state in ["ON", "OFF"]:
+                # Vérifier que l'état est valide ou si c'est une erreur de type
+                if state in ["ON", "OFF"] or "ERROR" in state:
                     # Notifier tous les callbacks enregistrés
                     for callback in self.callbacks:
                         try:

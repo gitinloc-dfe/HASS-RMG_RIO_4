@@ -141,6 +141,14 @@ class RMGDIO(SwitchEntity):
     async def _update_callback(self, device: str, state: str):
         """Callback appelé quand un état change"""
         if device == self._dio_name:
+            # Détecter si c'est une erreur de type DI
+            if "TYPE DI ERROR" in state:
+                self._is_read_only = True
+                self._attr_name = f"DIO {self._dio_number} (Entrée)"
+                _LOGGER.info(f"{self._dio_name} détecté comme entrée digitale (lecture seule)")
+                self.async_write_ha_state()
+                return
+            
             old_state = self._is_on
             self._is_on = (state == "ON")
             if old_state != self._is_on:
@@ -159,6 +167,11 @@ class RMGDIO(SwitchEntity):
     
     async def async_turn_on(self, **kwargs: Any) -> None:
         """Active la DIO (si c'est une sortie)"""
+        # Vérifier si c'est une entrée en mode lecture seule
+        if self._is_read_only:
+            _LOGGER.warning(f"{self._dio_name} est une entrée digitale (lecture seule)")
+            return
+        
         command = f"{self._dio_name} ON"
         success = await self._connection.send_command(command)
         if success:
@@ -168,6 +181,11 @@ class RMGDIO(SwitchEntity):
     
     async def async_turn_off(self, **kwargs: Any) -> None:
         """Désactive la DIO (si c'est une sortie)"""
+        # Vérifier si c'est une entrée en mode lecture seule
+        if self._is_read_only:
+            _LOGGER.warning(f"{self._dio_name} est une entrée digitale (lecture seule)")
+            return
+        
         command = f"{self._dio_name} OFF"
         success = await self._connection.send_command(command)
         if success:

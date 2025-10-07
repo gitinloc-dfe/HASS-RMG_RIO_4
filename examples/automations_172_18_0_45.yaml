@@ -1,0 +1,235 @@
+# Exemples d'automatisations pour votre RMG Rio 4
+# Numéro de série: 1000000097badc1a
+# Firmware: 1.1.4
+# Configuration: 4 relais + 4 entrées digitales (DI)
+
+# ============================================
+# AUTOMATISATIONS BASÉES SUR LES ENTRÉES DIO
+# ============================================
+
+automation:
+  # Exemple 1: Portail automatique basé sur DIO1 (détecteur de voiture)
+  - alias: "Portail - Ouverture automatique"
+    description: "Ouvre le portail quand une voiture est détectée sur DIO1"
+    trigger:
+      - platform: state
+        entity_id: switch.dio_1
+        to: "on"  # Signal détecté sur l'entrée DIO1
+    condition:
+      # Optionnel: vérifier l'heure (ex: seulement en journée)
+      - condition: time
+        after: "07:00:00"
+        before: "22:00:00"
+    action:
+      - service: rmg_rio4.pulse_relay
+        data:
+          entity_id: switch.relais_1
+          duration: 1.0  # Impulsion d'1 seconde pour le portail
+
+  # Exemple 2: Éclairage basé sur détecteur de mouvement (DIO2)
+  - alias: "Éclairage automatique extérieur"
+    description: "Active l'éclairage quand mouvement détecté sur DIO2"
+    trigger:
+      - platform: state
+        entity_id: switch.dio_2
+        to: "on"
+    action:
+      - service: switch.turn_on
+        target:
+          entity_id: switch.relais_2
+      # Programmer l'extinction après 5 minutes
+      - delay: "00:05:00"
+      - service: switch.turn_off
+        target:
+          entity_id: switch.relais_2
+
+  # Exemple 3: Alarme basée sur contact de porte (DIO3)
+  - alias: "Alarme - Porte ouverte"
+    description: "Déclenche l'alarme si la porte s'ouvre la nuit"
+    trigger:
+      - platform: state
+        entity_id: switch.dio_3
+        to: "on"  # Contact ouvert = porte ouverte
+    condition:
+      # Seulement la nuit ou si l'alarme est activée
+      - condition: or
+        conditions:
+          - condition: time
+            after: "22:00:00"
+          - condition: time
+            before: "06:00:00"
+          # Ou si un input_boolean "alarme_active" est ON
+          - condition: state
+            entity_id: input_boolean.alarme_active
+            state: "on"
+    action:
+      # Activer la sirène sur relais 3
+      - service: switch.turn_on
+        target:
+          entity_id: switch.relais_3
+      # Envoyer une notification
+      - service: notify.mobile_app_votre_telephone
+        data:
+          title: "🚨 ALERTE SÉCURITÉ"
+          message: "Porte ouverte détectée à {{ now().strftime('%H:%M') }}"
+      # Arrêter la sirène après 30 secondes
+      - delay: "00:00:30"
+      - service: switch.turn_off
+        target:
+          entity_id: switch.relais_3
+
+  # Exemple 4: Arrosage automatique basé sur capteur d'humidité (DIO4)
+  - alias: "Arrosage automatique"
+    description: "Lance l'arrosage si l'humidité est trop basse sur DIO4"
+    trigger:
+      - platform: state
+        entity_id: switch.dio_4
+        to: "off"  # Signal bas = sol sec
+        for: "00:30:00"  # Pendant 30 minutes
+    condition:
+      # Seulement le matin ou le soir
+      - condition: or
+        conditions:
+          - condition: time
+            after: "06:00:00"
+            before: "09:00:00"
+          - condition: time
+            after: "18:00:00"
+            before: "21:00:00"
+    action:
+      - service: rmg_rio4.pulse_relay
+        data:
+          entity_id: switch.relais_4
+          duration: 600  # Arrosage pendant 10 minutes
+
+# ============================================
+# SCRIPTS UTILES
+# ============================================
+
+script:
+  # Script pour ouvrir le portail manuellement
+  ouvrir_portail:
+    alias: "Ouvrir le portail"
+    icon: mdi:gate
+    sequence:
+      - service: rmg_rio4.pulse_relay
+        data:
+          entity_id: switch.relais_1
+          duration: 1.0
+
+  # Script d'urgence : arrêter tous les relais
+  arret_urgence:
+    alias: "Arrêt d'urgence - Tous relais OFF"
+    icon: mdi:emergency-brake
+    sequence:
+      - service: switch.turn_off
+        target:
+          entity_id:
+            - switch.relais_1
+            - switch.relais_2
+            - switch.relais_3
+            - switch.relais_4
+
+  # Script de test : cycler tous les relais
+  test_relais:
+    alias: "Test de tous les relais"
+    icon: mdi:test-tube
+    sequence:
+      - repeat:
+          count: 4
+          sequence:
+            - variables:
+                relay_number: "{{ repeat.index }}"
+            - service: rmg_rio4.pulse_relay
+              data:
+                entity_id: "switch.relais_{{ relay_number }}"
+                duration: 0.5
+            - delay: "00:00:01"
+
+# ============================================
+# CAPTEURS VIRTUELS BASÉS SUR LES DIO
+# ============================================
+
+# Vous pouvez créer des capteurs binaires pour une meilleure sémantique
+
+binary_sensor:
+  - platform: template
+    sensors:
+      detecteur_vehicule:
+        friendly_name: "Détecteur de véhicule"
+        device_class: motion
+        value_template: "{{ is_state('switch.dio_1', 'on') }}"
+        icon_template: >-
+          {% if is_state('switch.dio_1', 'on') %}
+            mdi:car
+          {% else %}
+            mdi:car-off
+          {% endif %}
+
+      detecteur_mouvement:
+        friendly_name: "Détecteur de mouvement"
+        device_class: motion
+        value_template: "{{ is_state('switch.dio_2', 'on') }}"
+
+      contact_porte:
+        friendly_name: "Contact de porte"
+        device_class: door
+        value_template: "{{ is_state('switch.dio_3', 'on') }}"
+
+      capteur_humidite:
+        friendly_name: "Capteur d'humidité sol"
+        device_class: moisture
+        value_template: "{{ is_state('switch.dio_4', 'on') }}"
+
+# ============================================
+# CONFIGURATION LOVELACE SUGGÉRÉE
+# ============================================
+
+# Ajoutez cette carte dans votre dashboard :
+# 
+# type: entities
+# title: RMG Rio 4 - Contrôle
+# entities:
+#   - entity: switch.relais_1
+#     name: "🚪 Portail"
+#     tap_action:
+#       action: call-service
+#       service: rmg_rio4.pulse_relay
+#       service_data:
+#         entity_id: switch.relais_1
+#         duration: 1.0
+#   - entity: switch.relais_2
+#     name: "💡 Éclairage extérieur"
+#   - entity: switch.relais_3
+#     name: "🚨 Sirène d'alarme"
+#   - entity: switch.relais_4
+#     name: "🌿 Arrosage"
+#   - type: divider
+#   - entity: binary_sensor.detecteur_vehicule
+#     name: "🚗 Détecteur véhicule"
+#   - entity: binary_sensor.detecteur_mouvement
+#     name: "🚶 Détecteur mouvement"
+#   - entity: binary_sensor.contact_porte
+#     name: "🚪 Contact porte"
+#   - entity: binary_sensor.capteur_humidite
+#     name: "💧 Humidité sol"
+#   - type: divider
+#   - entity: script.ouvrir_portail
+#   - entity: script.arret_urgence
+#   - entity: script.test_relais
+
+# ============================================
+# INFORMATIONS SYSTÈME
+# ============================================
+
+# Votre boîtier RMG Rio 4 :
+# - Numéro de série : 1000000097badc1a
+# - Firmware : 1.1.4
+# - Hostname : RMG-1000000097badc1a
+# - IP : 172.18.0.45
+# - Port : 22023
+# - Login : admin / Inloc+1300
+# 
+# Configuration matérielle détectée :
+# - 4 relais contrôlables (RELAY1 à RELAY4)
+# - 4 entrées digitales (DIO1 à DIO4) - lecture seule
