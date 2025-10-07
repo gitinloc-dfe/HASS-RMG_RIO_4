@@ -3,7 +3,7 @@
 Intégration Home Assistant pour le boîtier RMG RIO 4 (contrôle de relais via TCP)
 
 ![Home Assistant](https://img.shields.io/badge/Home%20Assistant-Compatible-blue.svg)
-![Version](https://img.shields.io/badge/version-1.0.0-green.svg)
+![Version](https://img.shields.io/badge/version-1.0.1-green.svg)
 
 ## Description
 
