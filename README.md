@@ -1,8 +1,13 @@
 # HASS-RMG-RIO-4
 
-Intégration Home Assistant pour le boîtier RMG RIO 4 (contrôle de relais via TCP)
+Intégration Home Assistant pour le boîtier RMG RIO 4 (contrôle de rela### Icônes
 
-![Home Assistant](https://img.shields.io/badge/Home%20Assistant-Compatible-blue.svg)
+L'intégration utilise des icônes Material Design Icons (MDI) qui changent automatiquement selon l'état :
+
+- **Relais** : `mdi:electric-switch` (OFF) / `mdi:electric-switch-closed` (ON)
+- **DIO** : `mdi:toggle-switch-off` (OFF) / `mdi:toggle-switch` (ON)
+
+📖 **Guide complet de personnalisation** : [docs/ICONS.md](docs/ICONS.md)ome Assistant](https://img.shields.io/badge/Home%20Assistant-Compatible-blue.svg)
 ![Version](https://img.shields.io/badge/version-1.0.1-green.svg)
 
 ## Description
@@ -85,6 +90,22 @@ service: switch.turn_off
 target:
   entity_id: switch.relais_1
 ```
+
+### Icônes dynamiques
+
+L'intégration utilise des icônes qui changent selon l'état des entités :
+
+#### Relais
+- 🔌 `mdi:electric-switch` : Relais désactivé (OFF)
+- 🔌 `mdi:electric-switch-closed` : Relais activé (ON)
+
+#### DIO (Entrées digitales)
+- 🎚️ `mdi:toggle-switch-off` : Entrée désactivée (OFF)
+- 🎚️ `mdi:toggle-switch` : Entrée activée (ON)
+
+#### DIO (Sorties digitales - si configurées)
+- 🔌 `mdi:electric-switch` : Sortie désactivée (OFF)
+- 🔌 `mdi:electric-switch-closed` : Sortie activée (ON)
 
 ### Service PULSE
 
@@ -220,9 +241,11 @@ logger:
 
 ## Compatibilité
 
-- Home Assistant : 2023.1 ou supérieur
-- Python : 3.11 ou supérieur
-- Boîtier : RMG RIO 4 avec firmware compatible TCP
+- **Home Assistant** : 2023.1 ou supérieur
+- **Python** : 3.11 ou supérieur  
+- **Boîtier** : RMG RIO 4 
+- **Micrologiciel recommandé** : v1.1.4 ou supérieur
+- **Protocole** : TCP sur port 22023
 
 ## Contribution
 

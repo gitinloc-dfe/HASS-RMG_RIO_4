@@ -52,12 +52,13 @@ class RMGRelay(SwitchEntity):
         # Attributs Home Assistant
         self._attr_name = f"Relais {relay_number}"
         self._attr_unique_id = f"rmg_rio4_relay_{relay_number}"
+        self._attr_icon = "mdi:electric-switch"
         self._attr_device_info = {
             "identifiers": {(DOMAIN, connection.host)},
             "name": "RMG Rio 4",
             "manufacturer": "RMG",
             "model": "Rio 4",
-            "sw_version": "1.0",
+            "sw_version": "1.1.4",
         }
         
         # Enregistrer le callback pour les mises à jour
@@ -76,6 +77,14 @@ class RMGRelay(SwitchEntity):
     def is_on(self) -> bool:
         """Retourne si le relais est activé"""
         return self._is_on
+    
+    @property
+    def icon(self) -> str:
+        """Retourne l'icône selon l'état du relais"""
+        if self._is_on:
+            return "mdi:electric-switch-closed"
+        else:
+            return "mdi:electric-switch"
     
     @property
     def available(self) -> bool:
@@ -125,12 +134,13 @@ class RMGDIO(SwitchEntity):
         # Attributs Home Assistant
         self._attr_name = f"DIO {dio_number}"
         self._attr_unique_id = f"rmg_rio4_dio_{dio_number}"
+        self._attr_icon = "mdi:electric-switch-closed"
         self._attr_device_info = {
             "identifiers": {(DOMAIN, connection.host)},
             "name": "RMG Rio 4",
             "manufacturer": "RMG",
             "model": "Rio 4",
-            "sw_version": "1.0",
+            "sw_version": "1.1.4",
         }
         
         # Enregistrer le callback pour les mises à jour
@@ -157,6 +167,22 @@ class RMGDIO(SwitchEntity):
     def is_on(self) -> bool:
         """Retourne si la DIO est activée"""
         return self._is_on
+    
+    @property
+    def icon(self) -> str:
+        """Retourne l'icône selon l'état et le type de DIO"""
+        if self._is_read_only:
+            # Pour les entrées digitales (DI)
+            if self._is_on:
+                return "mdi:toggle-switch"
+            else:
+                return "mdi:toggle-switch-off"
+        else:
+            # Pour les sorties digitales (DO)
+            if self._is_on:
+                return "mdi:electric-switch-closed"
+            else:
+                return "mdi:electric-switch"
     
     @property
     def available(self) -> bool:
