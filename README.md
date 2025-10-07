@@ -116,6 +116,8 @@ automation:
           duration: 0.5  # Impulsion de 500ms
 ```
 
+Pour plus d'exemples, consultez la [documentation Home Assistant sur les automatisations](https://www.home-assistant.io/docs/automation/).
+
 ## Protocole de communication
 
 Le boîtier RMG RIO 4 utilise un protocole TCP texte simple :
@@ -193,16 +195,11 @@ Le serveur envoie automatiquement :
 
 ### L'intégration ne se connecte pas
 
-1. **Testez d'abord avec le script fourni** :
-   ```bash
-   python3 test_connection.py 192.168.1.100 22023 admin votre_password
-   # ou pour un test complet :
-   python3 test_full.py 192.168.1.100 22023 admin votre_password
-   ```
-
-2. Vérifiez que l'adresse IP et le port sont corrects
-3. Vérifiez que le mot de passe est correct (souvent le numéro de série)
-4. Consultez les logs de Home Assistant : **Paramètres** → **Système** → **Logs**
+1. Vérifiez que l'adresse IP et le port sont corrects
+2. Vérifiez que le mot de passe est correct (souvent le numéro de série du boîtier)
+3. Testez la connectivité réseau : `ping IP_DU_BOITIER`
+4. Vérifiez que le port 22023 n'est pas bloqué par un firewall
+5. Consultez les logs de Home Assistant : **Paramètres** → **Système** → **Logs**
 
 ### Les états ne se mettent pas à jour
 

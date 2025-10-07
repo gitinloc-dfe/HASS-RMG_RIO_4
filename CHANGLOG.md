@@ -4,6 +4,25 @@ All notable changes to the RMG RIO 4 Home Assistant integration will be document
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.1] - 2025-10-07
+
+### Changed
+- **BREAKING**: Removed relay count configuration option from setup flow
+- RMG Rio 4 hardware specification: always 4 relays and 4 DIO (no configuration needed)
+- Simplified configuration interface with fewer fields
+- Hardcoded relay and DIO counts to match hardware specification
+
+### Removed
+- Configuration field for "Number of relays" (unnecessary for Rio 4)
+- Test scripts and demo files from repository (cleaner production release)
+- Developer documentation (moved to separate branch if needed)
+- Example automation files (users should create their own)
+
+### Fixed
+- HACS compatibility issues resolved
+- Repository structure optimized for production use
+- Cleaner user experience during setup
+
 ## [1.0.0] - 2025-10-07
 
 ### Added
