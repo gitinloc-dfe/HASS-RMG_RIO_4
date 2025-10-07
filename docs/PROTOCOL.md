@@ -20,7 +20,7 @@ Ce document décrit le protocole de communication TCP utilisé par le boîtier R
 ```
 Client → Serveur : [Connexion TCP]
 Serveur → Client : LOGINREQUEST?\r
-Client → Serveur : admin;Inloc+1300\r
+Client → Serveur : admin;serial\r
 Serveur → Client : AUTHENTICATION=Successful\r
 ```
 
@@ -30,7 +30,7 @@ Serveur → Client : AUTHENTICATION=Successful\r
 <username>;<password>\r
 ```
 
-**Exemple** : `admin;Inloc+1300\r`
+**Exemple** : `admin;serial\r`
 
 ## Commandes
 
@@ -173,7 +173,7 @@ while True:
 # Connexion
 Client → Serveur : [TCP connect]
 Serveur → Client : LOGINREQUEST?\r
-Client → Serveur : admin;Inloc+1300\r
+Client → Serveur : admin;serial\r
 Serveur → Client : AUTHENTICATION=Successful\r
 Serveur → Client : RELAY1=OFF\r
 
@@ -197,7 +197,7 @@ Client → Serveur : [TCP disconnect]
 # Connexion et authentification
 Client → Serveur : [TCP connect]
 Serveur → Client : LOGINREQUEST?\r
-Client → Serveur : admin;Inloc+1300\r
+Client → Serveur : admin;serial\r
 Serveur → Client : AUTHENTICATION=Successful\r
 
 # Commande PULSE

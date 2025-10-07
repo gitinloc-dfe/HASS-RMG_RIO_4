@@ -58,7 +58,8 @@ Cette intégration personnalisée permet de contrôler le boîtier **RMG RIO 4**
    - **Port TCP** : `22023` (par défaut)
    - **Nom d'utilisateur** : `admin` (par défaut)
    - **Mot de passe** : Votre mot de passe (ex: `numéro de série`)
-   - **Nombre de relais** : Le nombre de relais disponibles (ex: `4`)
+
+   *Note : Le Rio 4 a toujours 4 relais et 4 DIO, pas besoin de le spécifier*
 
 ## Utilisation
 

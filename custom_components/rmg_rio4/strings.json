@@ -8,8 +8,7 @@
           "host": "Adresse IP",
           "port": "Port TCP",
           "username": "Nom d'utilisateur",
-          "password": "Mot de passe",
-          "num_relays": "Nombre de relais"
+          "password": "Mot de passe"
         }
       }
     },

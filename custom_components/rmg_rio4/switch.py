@@ -10,7 +10,6 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from . import DOMAIN
-from .config_flow import CONF_NUM_RELAYS
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -24,11 +23,10 @@ async def async_setup_entry(
     
     # Récupérer la connexion depuis le domain
     connection = hass.data[DOMAIN][entry.entry_id]
-    num_relays = entry.data.get(CONF_NUM_RELAYS, 4)
     
-    # Créer les entités switch pour chaque relais
+    # Créer les entités switch pour chaque relais (toujours 4 sur un Rio 4)
     entities = []
-    for i in range(1, num_relays + 1):
+    for i in range(1, 5):  # Rio 4 = 4 relais
         entities.append(RMGRelay(connection, i))
     
     # Créer les entités DIO (entrées/sorties digitales)

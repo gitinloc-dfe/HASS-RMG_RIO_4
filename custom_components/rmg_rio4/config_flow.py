@@ -16,15 +16,12 @@ from . import DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
-CONF_NUM_RELAYS = "num_relays"
-
 # Schéma de configuration
 DATA_SCHEMA = vol.Schema({
     vol.Required(CONF_HOST): str,
     vol.Optional(CONF_PORT, default=22023): int,
     vol.Required(CONF_USERNAME, default="admin"): str,
     vol.Required(CONF_PASSWORD): str,
-    vol.Optional(CONF_NUM_RELAYS, default=4): vol.All(int, vol.Range(min=1, max=16)),
 })
 
 

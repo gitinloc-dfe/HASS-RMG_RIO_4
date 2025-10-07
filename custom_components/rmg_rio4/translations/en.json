@@ -8,8 +8,7 @@
           "host": "IP Address",
           "port": "Port",
           "username": "Username",
-          "password": "Password",
-          "num_relays": "Number of relays"
+          "password": "Password"
         }
       }
     },

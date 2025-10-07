@@ -268,9 +268,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     
     # Demander les états initiaux (le serveur envoie automatiquement les états à la connexion)
     # Mais on peut en demander d'autres si besoin
-    num_relays = entry.data.get("num_relays", 4)
     await asyncio.sleep(1)  # Laisser le temps de recevoir les états automatiques
-    await connection.request_initial_states(num_relays, 4)
+    await connection.request_initial_states(4, 4)  # Rio 4 = toujours 4 relais et 4 DIO
     
     # Charger les plateformes (switch, etc.)
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
