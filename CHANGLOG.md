@@ -4,6 +4,59 @@ All notable changes to the RMG RIO 4 Home Assistant integration will be document
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2025-10-08
+
+### 🚀 Major: Automatic Reconnection System
+
+#### Added
+- **Robust automatic reconnection** with exponential backoff (5s → 5min max)
+- **Connection health monitoring** (ping every 30 seconds)
+- **Advanced entity state management** (available/unavailable status)
+- **Manual reconnection service** `rmg_rio4.reconnect`
+- **Material Design Icons** with dynamic state-based switching
+- **Comprehensive reconnection documentation** (docs/RECONNECTION.md)
+- **Enhanced logging** with visual indicators (✅❌🔄💓)
+
+#### Improved
+- **Connection robustness**: Automatically handles all disconnection types
+- **User feedback**: Entities marked unavailable during outages
+- **Performance**: Fast problem detection (30s max)
+- **Maintenance**: Transparent reconnection after Rio 4 reboot
+
+#### Technical Implementation
+- Continuous monitoring with `_monitor_connection_health()`
+- Intelligent reconnection with `_reconnect_loop()`
+- Robust TCP error handling (ConnectionError, BrokenPipeError)
+- Smart timeouts on commands (5s) and entities (5min)
+- Background task management for seamless operation
+
+### 🎨 Icons and User Interface
+
+#### Added
+- **Dynamic MDI icons** for relays and DIO entities
+- **Icon customization guide** (docs/ICONS.md)
+- **Custom HACS repository icon** (PNG 256x256)
+- **Correct firmware version** (1.1.4)
+
+#### Icon Details
+- Relays: `mdi:electric-switch` (OFF) / `mdi:electric-switch-closed` (ON)
+- DIO: `mdi:toggle-switch-off` (OFF) / `mdi:toggle-switch` (ON)
+- State-dependent icon switching for better visual feedback
+
+### 🔧 Services Enhanced
+
+#### Updated
+- `rmg_rio4.pulse_relay`: Improved error handling and reconnection support
+- `rmg_rio4.reconnect`: New service for manual reconnection
+
+### 📖 Documentation
+
+#### Added
+- Complete reconnection system documentation
+- Icon customization examples and best practices
+- Troubleshooting guide for connection issues
+- Performance monitoring guidelines
+
 ## [1.0.1] - 2025-10-07
 
 ### Changed

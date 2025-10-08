@@ -22,15 +22,18 @@ Pour personnaliser l'icône visible dans HACS :
 
 Cette intégration personnalisée permet de contrôler le boîtier **RMG RIO 4** via Home Assistant. Le boîtier communique en TCP sur le port 22023 et permet de piloter des relais et des sorties DIO.
 
-### Fonctionnalités
+## ✨ Fonctionnalités
 
-✅ Connexion TCP persistante au boîtier  
-✅ Authentification automatique  
-✅ Contrôle ON/OFF des relais  
-✅ Mode PULSE (impulsion temporaire)  
-✅ Mise à jour en temps réel des états  
-✅ Configuration via l'interface graphique  
-✅ Support de plusieurs relais et sorties DIO  
+- 🔌 **Connexion TCP** sécurisée avec authentification
+- 🎛️ **4 relais** contrôlables (ON/OFF/PULSE)  
+- 📊 **4 entrées/sorties digitales** (DIO)
+- 🏠 **Intégration native** Home Assistant
+- ⚡ **Service PULSE** pour activations temporaires
+- 🌐 **Configuration via interface** graphique
+- 📱 **Compatible HACS** pour installation facile
+- 🔄 **Reconnexion automatique** robuste avec backoff exponentiel
+- 💓 **Surveillance de santé** de connexion en temps réel
+- 🛠️ **Service de reconnexion** manuelle pour maintenance  
 
 ## Installation
 
@@ -115,11 +118,11 @@ L'intégration utilise des icônes qui changent selon l'état des entités :
 - 🔌 `mdi:electric-switch` : Sortie désactivée (OFF)
 - 🔌 `mdi:electric-switch-closed` : Sortie activée (ON)
 
-### Service PULSE
+### Services disponibles
 
-Le service `rmg_rio4.pulse_relay` permet d'activer un relais pendant une durée définie puis de le désactiver automatiquement.
+#### Service PULSE : `rmg_rio4.pulse_relay`
 
-#### Exemple d'utilisation
+Le service permet d'activer un relais pendant une durée définie puis de le désactiver automatiquement.
 
 ```yaml
 # Impulsion de 2.5 secondes sur le relais 1
@@ -128,6 +131,25 @@ data:
   entity_id: switch.relais_1
   duration: 2.5
 ```
+
+#### Service de reconnexion : `rmg_rio4.reconnect`
+
+Force une reconnexion immédiate en cas de problème de communication.
+
+```yaml
+service: rmg_rio4.reconnect
+```
+
+### Reconnexion automatique
+
+L'intégration dispose d'un **système de reconnexion automatique robuste** :
+
+- ✅ **Détection automatique** des déconnexions (ping toutes les 30s)
+- 🔄 **Reconnexion intelligente** avec backoff exponentiel (5s → 5min max)
+- 📊 **Gestion d'état avancée** (entités indisponibles pendant déconnexion)
+- 🛠️ **Service de reconnexion manuelle** pour forcer une reconnexion
+
+📖 **Guide complet** : [docs/RECONNECTION.md](docs/RECONNECTION.md)
 
 #### Cas d'usage typique : Portail ou porte de garage
 

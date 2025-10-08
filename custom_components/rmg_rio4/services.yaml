@@ -21,3 +21,8 @@ pulse_relay:
           max: 60
           step: 0.1
           unit_of_measurement: "s"
+
+reconnect:
+  name: Forcer la reconnexion
+  description: Force une reconnexion immédiate au RMG Rio 4 en cas de problème de communication
+  fields: {}
